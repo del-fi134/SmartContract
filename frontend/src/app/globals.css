@@ -1,0 +1,54 @@
+@import "tailwindcss";
+
+@theme {
+  --color-bg-dark: #0f172a;
+  --color-card-bg: rgba(30, 41, 59, 0.7);
+  --color-card-border: rgba(255, 255, 255, 0.08);
+  --color-text-main: #f8fafc;
+  --color-text-muted: #94a3b8;
+  --color-primary: #3b82f6;
+  --color-primary-hover: #2563eb;
+  --color-success: #10b981;
+  --color-success-hover: #059669;
+  --color-danger: #ef4444;
+  --color-danger-hover: #dc2626;
+  --color-warning: #f59e0b;
+  --font-heading: "Outfit", sans-serif;
+  --font-body: "Inter", sans-serif;
+}
+
+body {
+  background-color: var(--color-bg-dark);
+  background-image:
+    radial-gradient(ellipse at top left, rgba(59, 130, 246, 0.15) 0%, transparent 40%),
+    radial-gradient(ellipse at bottom right, rgba(16, 185, 129, 0.1) 0%, transparent 40%);
+  background-attachment: fixed;
+  color: var(--color-text-main);
+}
+
+.card {
+  background: var(--color-card-bg);
+  border: 1px solid var(--color-card-border);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.toast {
+  transform: translateX(120%);
+  opacity: 0;
+  transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.toast.show {
+  transform: translateX(0);
+  opacity: 1;
+}
+
+.dot {
+  transition: all 0.3s ease;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
