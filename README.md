@@ -6,62 +6,50 @@ Bienvenido al repositorio de **Herencia Digital Segura**, una dApp (Aplicación 
 
 ## 🏗️ Arquitectura del Proyecto
 
-El proyecto es un monorepo que contiene tanto el Frontend (Next.js) como el entorno de los Contratos Inteligentes (futuro Hardhat). 
+El proyecto está compuesto por dos pilares principales:
 
-*   `frontend/`: Contiene la aplicación web construida con **Next.js**, **React**, y **TailwindCSS**.
-*   `SmartContract/` (futuro `contracts/`): Contendrá los contratos inteligentes programados en **Solidity** y scripts de despliegue.
-*   **Web3:** Usamos `ethers v6` para la conexión de la UI con la Blockchain (Avalanche Fuji Testnet).
+*   **Smart Contract (Remix IDE):** Toda la lógica de la blockchain fue programada, compilada y desplegada directamente desde [Remix](https://remix.ethereum.org). El puente que une nuestro frontend con la blockchain es el archivo `abi.json`, el cual se extrajo directamente de Remix.
+*   **Frontend (Next.js):** Todo el código bajo la carpeta `frontend/`. Esta aplicación web fue construida con **Next.js**, **React**, **TailwindCSS** y usa **ethers v6** para enviar las peticiones al contrato desplegado.
 
 ---
 
 ## 💻 Guía de Inicio Rápido (Setup Local)
 
-Esta guía te ayudará a clonar y levantar el proyecto en tu máquina local para comenzar a desarrollar (Dev B / Dev C).
+Sigue estos pasos para clonar y levantar el proyecto en tu máquina local.
 
-### 1. Clonar el repositorio y cambiar a la rama de desarrollo
+### 1. Requisitos Previos: Core Wallet
+A diferencia de otros proyectos, aquí **utilizamos Core Wallet** (la wallet oficial de Avalanche) en lugar de MetaMask para nuestras pruebas.
+1. Instala la extensión **Core Wallet** en tu navegador.
+2. Ve a los ajustes de Core Wallet y activa la **Red de Pruebas (Testnet Mode)**. Esto te permitirá conectarte a **Avalanche Fuji Testnet**.
+3. Consigue fondos de prueba (AVAX) en el [faucet oficial de Avalanche](https://core.app/tools/testnet-faucet/?subnet=c&token=c) para poder pagar el Gas de las transacciones.
+
+### 2. Clonar y Preparar el Frontend
+Abre tu terminal, clona el repositorio y ubícate en la rama de trabajo. Todo el código de la web vive en la carpeta `frontend/`:
+
 ```bash
-git clone <URL_DEL_REPOSITORIO>
-cd SmartContract
-
-# Cambia a la rama en la que están trabajando
+# Cambia a la rama de desarrollo
 git fetch origin
 git checkout feature/nextjs-migration
-```
 
-### 2. Instalar Dependencias del Frontend
-Todo el entorno de desarrollo actual (tanto interfaz como lógica web) vive dentro de la carpeta `frontend`.
-```bash
+# Entra a la carpeta de la app web
 cd frontend
+
+# Instala todas las dependencias
 npm install
 ```
 
 ### 3. Variables de Entorno (`.env.local`)
-Crea un archivo `.env.local` dentro de la carpeta `frontend/`. 
-Comunícate con el Web3 Lead del equipo para que te pase los valores exactos, pero la estructura base suele ser:
+Crea un archivo llamado `.env.local` dentro de la carpeta `frontend/`. 
+Comunícate directamente con el Web3 Lead del equipo para que te pase las direcciones correctas que debes colocar ahí. La estructura base es:
 ```env
-NEXT_PUBLIC_CONTRACT_ADDRESS="0xTuDireccionDelContrato..."
+NEXT_PUBLIC_CONTRACT_ADDRESS="0xAquiVaLaDireccionDelContrato..."
 NEXT_PUBLIC_NETWORK_ID="43113"
 ```
-*(Nota: Nunca comitees el archivo `.env.local` al repositorio).*
+*(Nota: Nunca comitees el archivo `.env.local` al repositorio por seguridad).*
 
 ### 4. Lanzar el Servidor de Desarrollo
 ```bash
 npm run dev
 ```
-La aplicación estará disponible en `http://localhost:3000`.
-
----
-
-## 🦊 Pruebas Locales con MetaMask
-Para que la aplicación funcione en tu local, necesitarás:
-1. Instalar la extensión de **MetaMask** en tu navegador.
-2. Añadir la red de pruebas **Avalanche Fuji Testnet** a tu MetaMask.
-3. Pedir algunos AVAX falsos en cualquier *faucet* de Avalanche Fuji para pagar comisiones (Gas).
-4. El Web3 Lead te indicará qué dirección actuar como "Owner" y cuál como "Beneficiario" para probar los bloqueos y funcionalidades de la interfaz.
-
----
-
-## 📝 Reglas Básicas del Equipo
-*   **Commits descriptivos:** Usa prefijos como `feat:`, `fix:`, `style:`.
-*   **Ramas (Branches):** Trabaja siempre en tu rama antes de hacer merge a `main`.
-*   **Dudas Web3:** Si algún comportamiento del Smart Contract parece no funcionar, consulta los logs de `[DEBUG]` en la consola del navegador y levántalo con el Web3 Lead.
+La aplicación estará disponible en `http://localhost:3000`. 
+Conecta tu Core Wallet y recuerda tener a mano la cuenta del "Propietario" y la cuenta del "Beneficiario" para probar cómo reacciona y se bloquea la interfaz de usuario.
