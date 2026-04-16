@@ -26,7 +26,7 @@ interface WalletContextType {
   disconnect: () => void;
   loadContractData: () => Promise<void>;
   ping: () => Promise<void>;
-  executeInheritance: () => Promise<void>;
+  executeInheritance: (montoStr: string) => Promise<void>;
   mockState: ContractState;
 }
 
@@ -41,9 +41,9 @@ export function WalletProvider({ children }: { children: ReactNode }) {
   const [contractState, setContractState] = useState<ContractState | null>(null);
   const [mockState, setMockState] = useState<ContractState>({
     owner: MOCK_STATE.owner,
-    heir: MOCK_STATE.heir,
-    lastPingTime: BigInt(MOCK_STATE.lastPingTime),
-    timeoutDuration: BigInt(MOCK_STATE.timeoutDuration),
+    beneficiario: MOCK_STATE.beneficiario,
+    ultimaSenalDeVida: BigInt(MOCK_STATE.ultimaSenalDeVida),
+    PLAZO_DEMO: BigInt(MOCK_STATE.PLAZO_DEMO),
     balance: MOCK_STATE.balance,
   });
 
@@ -80,8 +80,13 @@ export function WalletProvider({ children }: { children: ReactNode }) {
     try {
       if (!window.ethereum) return;
       const ethProvider = new BrowserProvider(window.ethereum);
+      await window.ethereum.request({
+        method: "wallet_requestPermissions",
+        params: [{ eth_accounts: {} }]
+      });
       const accounts = await window.ethereum.request({ method: "eth_requestAccounts" }) as string[];
-      
+
+
       if (accounts.length === 0) {
         disconnect();
         return;
@@ -89,14 +94,14 @@ export function WalletProvider({ children }: { children: ReactNode }) {
 
       setUserAddress(accounts[0]);
       setProvider(ethProvider);
-      
+
       const signer = await ethProvider.getSigner();
       const contractInstance = new Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
       setContract(contractInstance);
       setIsConnected(true);
-      
+
       showToast("Wallet conectada con éxito", "success");
-      
+
       await loadContractData();
     } catch {
       showToast("Conexión cancelada o fallida.", "error");
@@ -107,7 +112,8 @@ export function WalletProvider({ children }: { children: ReactNode }) {
     setUserAddress(null);
     setProvider(null);
     setContract(null);
-    setContractState(null);
+    // No borramos contractState para no perder los datos de la blockchain 
+    // y evitar que la UI salte al "mockState"
     setIsConnected(false);
     showToast("Wallet desconectada", "info");
   };
@@ -117,16 +123,16 @@ export function WalletProvider({ children }: { children: ReactNode }) {
 
     try {
       const owner = await contract.owner();
-      const heir = await contract.heir();
-      const lastPingTime = await contract.lastPingTime();
-      const timeoutDuration = await contract.timeoutDuration();
+      const beneficiario = await contract.beneficiario();
+      const ultimaSenalDeVida = await contract.ultimaSenalDeVida();
+      const PLAZO_DEMO = await contract.PLAZO_DEMO();
       const balanceWei = await provider!.getBalance(CONTRACT_ADDRESS);
-      
+
       setContractState({
         owner,
-        heir,
-        lastPingTime,
-        timeoutDuration,
+        beneficiario,
+        ultimaSenalDeVida,
+        PLAZO_DEMO,
         balance: (Number(balanceWei) / 1e18).toFixed(4),
       });
     } catch {
@@ -138,7 +144,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
     if (!contract) return;
 
     try {
-      const tx = await contract.ping();
+      const tx = await contract.estoyVivo();
       showToast("Transacción generada. Esperando confirmación...", "info");
       await tx.wait();
       showToast("¡Prueba de vida confirmada en la Blockchain!", "success");
@@ -152,15 +158,20 @@ export function WalletProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const executeInheritance = async () => {
+  const executeInheritance = async (montoStr: string) => {
+    console.log("Entrando a executeInheritance en Context con monto:", montoStr);
     if (!contract) return;
 
     try {
-      const tx = await contract.executeInheritance();
+      console.log("Enviando TX al contrato ejecutarHerencia...");
+      const tx = await contract.ejecutarHerencia(BigInt(montoStr));
+      console.log("Transaccion devuelta por ethers:", tx);
       showToast("Procesando herencia en la red...", "warning");
       await tx.wait();
+      console.log("Transaccion minada y confirmada");
       showToast("¡Herencia ejecutada con éxito! Fondos transferidos.", "success");
     } catch (error) {
+      console.error("[ERROR CRÍTICO] ejecutarHerencia falló:", error);
       const err = error as { reason?: string };
       showToast(err.reason || "Error al intentar ejecutar la herencia", "error");
     }

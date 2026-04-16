@@ -1,16 +1,16 @@
 export interface ContractState {
   owner: string;
-  heir: string;
-  lastPingTime: bigint;
-  timeoutDuration: bigint;
+  beneficiario: string;
+  ultimaSenalDeVida: bigint;
+  PLAZO_DEMO: bigint;
   balance: string;
 }
 
 export interface MockState {
   owner: string;
-  heir: string;
-  lastPingTime: number;
-  timeoutDuration: number;
+  beneficiario: string;
+  ultimaSenalDeVida: number;
+  PLAZO_DEMO: number;
   balance: string;
 }
 

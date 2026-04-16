@@ -1,21 +1,15 @@
 import { BrowserProvider, Contract, formatEther } from "ethers";
+import abi from "@/constants/abi.json"
 
-export const CONTRACT_ADDRESS = "0x0000000000000000000000000000000000000000";
+export const CONTRACT_ADDRESS = "0xd639a2b963c935473C614dC61082430A0C8E76d3"
+export const CONTRACT_ABI = abi
 
-export const CONTRACT_ABI = [
-  "function ping() public",
-  "function executeInheritance() public",
-  "function owner() public view returns (address)",
-  "function heir() public view returns (address)",
-  "function lastPingTime() public view returns (uint256)",
-  "function timeoutDuration() public view returns (uint256)",
-];
 
 export const MOCK_STATE = {
   owner: "0x1234567890abcdef1234567890abcdef12345678",
-  heir: "0xabcdef1234567890abcdef1234567890abcdef12",
-  lastPingTime: Math.floor(Date.now() / 1000) - 86400 * 25,
-  timeoutDuration: 86400 * 30,
+  beneficiario: "0xabcdef1234567890abcdef1234567890abcdef12",
+  ultimaSenalDeVida: Math.floor(Date.now() / 1000) - 86400 * 25,
+  PLAZO_DEMO: 86400 * 30,
   balance: "1.5",
 };
 
@@ -34,7 +28,7 @@ export function formatBalance(balanceWei: bigint): string {
 
 export function formatCountdown(timeLeftMs: number): string {
   if (timeLeftMs <= 0) return "00:00:00:00";
-  
+
   const days = Math.floor(timeLeftMs / (1000 * 60 * 60 * 24));
   const hours = Math.floor((timeLeftMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
   const minutes = Math.floor((timeLeftMs % (1000 * 60 * 60)) / (1000 * 60));

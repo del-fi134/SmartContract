@@ -20,9 +20,9 @@ export function StatusHeader() {
     }
 
     const update = () => {
-      const deadlineMs = (Number(state.lastPingTime) + Number(state.timeoutDuration)) * 1000;
+      const deadlineMs = (Number(state.ultimaSenalDeVida) + Number(state.PLAZO_DEMO)) * 1000;
       const timeLeftMs = deadlineMs - Date.now();
-      const ratio = timeLeftMs / (Number(state.timeoutDuration) * 1000);
+      const ratio = timeLeftMs / (Number(state.PLAZO_DEMO) * 1000);
 
       if (timeLeftMs <= 0) setStatus("expired");
       else if (ratio <= 0.3) setStatus("warning");
@@ -60,7 +60,7 @@ export function StatusHeader() {
         <div className={`w-3.5 h-3.5 rounded-full ${getDotClass()}`} />
         <span style={{ fontFamily: "var(--font-outfit)" }}>{getStatusText()}</span>
       </div>
-      
+
       <div className="font-mono text-slate-400 bg-black/30 px-4 py-2 rounded-lg border border-white/10">
         {userAddress ? formatAddress(userAddress) : ""}
       </div>

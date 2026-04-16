@@ -27,9 +27,9 @@ export function ProofOfLifeCard() {
     }
 
     const update = () => {
-      const deadlineMs = (Number(state.lastPingTime) + Number(state.timeoutDuration)) * 1000;
+      const deadlineMs = (Number(state.ultimaSenalDeVida) + Number(state.PLAZO_DEMO)) * 1000;
       const timeLeftMs = deadlineMs - Date.now();
-      
+
       if (timeLeftMs <= 0) {
         setCountdown("00:00:00:00");
         setIsExpired(true);
@@ -51,45 +51,44 @@ export function ProofOfLifeCard() {
   };
 
   const formatLastPing = () => {
-    return new Date(Number(state.lastPingTime) * 1000).toLocaleString("es-ES");
+    return new Date(Number(state.ultimaSenalDeVida) * 1000).toLocaleString("es-ES");
   };
 
   return (
     <div className="card rounded-3xl p-8 flex flex-col transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl">
-      <h2 
+      <h2
         className="text-2xl mb-6 pb-3 border-b border-white/10 text-white"
         style={{ fontFamily: "var(--font-outfit)" }}
       >
         Prueba de Vida
       </h2>
-      
+
       <p className="text-slate-400 leading-relaxed mb-4">
         Confirma que sigues activo para reiniciar el contador de la herencia y garantizar el control de tus fondos.
       </p>
-      
+
       <div className="text-center my-6 p-6 bg-black/20 rounded-xl border border-white/10">
         <label className="text-xs uppercase tracking-[0.2em] text-slate-400">
           Tiempo Restante:
         </label>
-        <div 
-          className={`text-4xl font-bold mt-2 tracking-wide ${
-            isExpired ? "text-red-500" : "text-blue-500"
-          }`}
-          style={{ 
+        <div
+          className={`text-4xl font-bold mt-2 tracking-wide ${isExpired ? "text-red-500" : "text-blue-500"
+            }`}
+          style={{
             fontFamily: "var(--font-outfit)",
-            textShadow: isExpired 
-              ? "0 0 25px rgba(239,68,68,0.4)" 
+            textShadow: isExpired
+              ? "0 0 25px rgba(239,68,68,0.4)"
               : "0 0 25px rgba(59,130,246,0.4)"
           }}
         >
           {mounted ? countdown : "--:--:--"}
         </div>
       </div>
-      
+
       <p className="text-sm text-center text-slate-400 mb-auto">
         Última actividad: <span className="text-slate-200 font-medium">{mounted ? formatLastPing() : "Cargando..."}</span>
       </p>
-      
+
       <button
         onClick={handlePing}
         disabled={!isConnected || isProcessing}
